@@ -1,0 +1,15 @@
+fastapi
+uvicorn[standard]
+sqlalchemy>=2.0
+python-jose[cryptography]
+bcrypt
+python-multipart
+python-dotenv
+email-validator
+Pillow
+psycopg2-binary
+cloudinary
+rembg
+scikit-image
+pymatting
+requests
