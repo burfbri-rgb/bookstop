@@ -39,7 +39,10 @@
         "expo-build-properties",
         {
           "android": {
-            "abiFilters": ["arm64-v8a", "armeabi-v7a", "x86_64"]
+            "buildArchs": ["arm64-v8a", "armeabi-v7a"],
+            "enableBundleCompression": true,
+            "enableMinifyInReleaseBuilds": true,
+            "enableShrinkResourcesInReleaseBuilds": true
           }
         }
       ]
