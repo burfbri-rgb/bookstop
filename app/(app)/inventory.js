@@ -37,6 +37,7 @@ export default function Inventory() {
     if (!query.trim()) return items;
     const q = query.toLowerCase();
     return items.filter(i =>
+      (i.title && i.title.toLowerCase().includes(q)) ||
       (i.barcode_isbn && i.barcode_isbn.toLowerCase().includes(q)) ||
       i.item_id?.toLowerCase().includes(q)
     );
@@ -51,7 +52,7 @@ export default function Inventory() {
       <View style={s.topRow}>
         <TextInput
           style={s.search}
-          placeholder="Search by barcode or ID..."
+          placeholder="Search by title, barcode..."
           placeholderTextColor={colors.textLight}
           value={query}
           onChangeText={setQuery}
@@ -69,6 +70,7 @@ export default function Inventory() {
                 <Ionicons name={item.clean_image_url ? "image" : "cube"} size={24} color={colors.textLight} />
               </View>
               <View style={s.info}>
+                {item.title ? <Text style={s.title} numberOfLines={1}>{item.title}</Text> : null}
                 <Text style={s.price}>${parseFloat(item.price).toFixed(2)}</Text>
                 {item.barcode_isbn && <Text style={s.barcode}>{item.barcode_isbn}</Text>}
               </View>
@@ -89,6 +91,7 @@ const s = StyleSheet.create({
   itemCard: { flexDirection: "row", alignItems: "center", backgroundColor: colors.white, borderRadius: radius.lg, padding: spacing.sm, marginBottom: spacing.sm, ...shadows.sm },
   thumb: { width: 48, height: 48, borderRadius: radius.sm, backgroundColor: colors.border, justifyContent: "center", alignItems: "center" },
   info: { flex: 1, marginLeft: spacing.sm },
+  title: { fontSize: 15, fontWeight: "600", color: colors.text },
   price: { fontSize: 17, fontWeight: "700", color: colors.text },
   barcode: { fontSize: 12, color: colors.textSecondary, marginTop: 2 },
   empty: { textAlign: "center", color: colors.textSecondary, marginTop: spacing.xxl },

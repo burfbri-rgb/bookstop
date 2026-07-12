@@ -11,6 +11,7 @@ export default function ItemDetail() {
   const router = useRouter();
   const { activeStore } = useStore();
   const [item, setItem] = useState(null);
+  const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
   const [barcode, setBarcode] = useState("");
@@ -24,6 +25,7 @@ export default function ItemDetail() {
         const found = Array.isArray(res) ? res.find(i => i.item_id === id) : null;
         if (found) {
           setItem(found);
+          setTitle(found.title || "");
           setPrice(found.price?.toString() || "");
           setStock(found.stock_count?.toString() || "");
           setBarcode(found.barcode_isbn || "");
@@ -43,6 +45,7 @@ export default function ItemDetail() {
         price: parseFloat(price),
         stock_count: parseInt(stock),
         barcode_isbn: barcode || undefined,
+        title: title || undefined,
       });
       router.back();
     } catch (e) { Alert.alert("Error", e.body || e.message); }
@@ -74,6 +77,7 @@ export default function ItemDetail() {
         <Badge label={`Stock: ${item.stock_count}`} icon="cube" variant={item.stock_count <= 2 ? "danger" : "success"} />
         {item.barcode_isbn && <Badge label={item.barcode_isbn} icon="barcode" />}
       </View>
+      <Input placeholder="Title" value={title} onChangeText={setTitle} style={{ marginBottom: spacing.sm }} />
       <Input placeholder="Price" value={price} onChangeText={setPrice} keyboardType="decimal-pad" style={{ marginBottom: spacing.sm }} />
       <Input placeholder="Stock Count" value={stock} onChangeText={setStock} keyboardType="number-pad" style={{ marginBottom: spacing.sm }} />
       <Input placeholder="Barcode / ISBN" value={barcode} onChangeText={setBarcode} style={{ marginBottom: spacing.md }} />

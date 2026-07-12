@@ -5,7 +5,6 @@ import { CameraView, useCameraPermissions } from "expo-camera";
 import { Ionicons } from "@expo/vector-icons";
 import { useStore } from "../../context/StoreContext";
 import * as inventoryApi from "../../api/inventory";
-import * as visionApi from "../../api/vision";
 import { Btn, Input, Card, EmptyState } from "../../context/UI";
 import { colors, spacing, radius, shadows } from "../../context/Theme";
 
@@ -41,15 +40,7 @@ export default function AddItem() {
     try {
       const pic = await cameraRef.current.takePictureAsync();
       setPhoto(pic.uri);
-      try {
-        const result = await visionApi.lookupImage(pic.uri);
-        if (result.title) setTitle(result.title);
-        if (result.isbn) setBarcode(result.isbn);
-        setStep("form");
-        return;
-      } catch {
-        setStep("barcode");
-      }
+      setStep("barcode");
     } catch (e) { Alert.alert("Error", "Failed to capture photo"); }
     finally { setProcessing(false); }
   };
@@ -64,7 +55,7 @@ export default function AddItem() {
     setSaving(true);
     try {
       const img = photo ? await inventoryApi.processImage(photo) : null;
-      await inventoryApi.createInventory(activeStore.store_id, price, parseInt(stock), barcode || undefined, img?.clean_image_url);
+      await inventoryApi.createInventory(activeStore.store_id, price, parseInt(stock), barcode || undefined, img?.clean_image_url, title || undefined);
       router.back();
     } catch (e) { Alert.alert("Error", e.body || e.message); }
     finally { setSaving(false); }
@@ -84,7 +75,7 @@ export default function AddItem() {
             {processing ? <ActivityIndicator size="large" color={colors.white} /> : <View style={s.captureInner} />}
           </TouchableOpacity>
           <View style={{ flexDirection: "row", gap: spacing.sm, marginTop: spacing.md }}>
-            <Btn title="Skip Camera" variant="ghost" onPress={() => { setPhoto(null); setStep("barcode"); }} />
+            <Btn title="Skip Photo" variant="ghost" onPress={() => { setPhoto(null); setStep("barcode"); }} />
           </View>
         </View>
       </View>
@@ -102,7 +93,7 @@ export default function AddItem() {
         <CameraView ref={cameraRef} style={s.camera} facing="back" onBarcodeScanned={handleBarcode} />
         <View style={s.cameraOverlay}>
           <Text style={s.hint}>Point camera at back cover barcode</Text>
-          <Btn title="Enter Manually" variant="ghost" onPress={() => setStep("form")} style={{ marginTop: spacing.sm }} />
+          <Btn title="No Barcode" variant="ghost" onPress={() => setStep("form")} style={{ marginTop: spacing.sm }} />
         </View>
       </View>
     );
@@ -123,7 +114,7 @@ export default function AddItem() {
           <Image source={{ uri: photo }} style={s.preview} />
         </Card>
       )}
-      {title ? <Text style={s.titleText}>{title}</Text> : null}
+      <Input placeholder="Title" value={title} onChangeText={setTitle} style={{ marginBottom: spacing.sm }} />
       <Input placeholder="Price" value={price} onChangeText={setPrice} keyboardType="decimal-pad" style={{ marginBottom: spacing.sm }} />
       <Input placeholder="Stock Count" value={stock} onChangeText={setStock} keyboardType="number-pad" style={{ marginBottom: spacing.sm }} />
       <Input placeholder="Barcode / ISBN" value={barcode} onChangeText={setBarcode} style={{ marginBottom: spacing.md }} />
@@ -142,5 +133,4 @@ const s = StyleSheet.create({
   hint: { color: colors.white, fontSize: 16, fontWeight: "500", marginBottom: spacing.sm },
   formContainer: { flexGrow: 1, backgroundColor: colors.bg, padding: spacing.md },
   preview: { width: "100%", height: 200, borderRadius: radius.md },
-  titleText: { fontSize: 16, fontWeight: "600", color: colors.text, marginBottom: spacing.sm, textAlign: "center" },
 });
