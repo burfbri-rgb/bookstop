@@ -4,10 +4,10 @@ export function listInventory(storeId) {
   return api(`/api/inventory?store_id=${storeId}`);
 }
 
-export function createInventory(storeId, price, stockCount, barcode, imageUrl) {
+export function createInventory(storeId, price, stockCount, barcode, imageUrl, title) {
   return api("/api/inventory", {
     method: "POST",
-    body: { store_id: storeId, price, stock_count: stockCount, barcode_isbn: barcode, clean_image_url: imageUrl },
+    body: { store_id: storeId, price, stock_count: stockCount, barcode_isbn: barcode, clean_image_url: imageUrl, title },
   });
 }
 
