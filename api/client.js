@@ -27,7 +27,7 @@ export async function api(path, options = {}) {
   if (token) headers["Authorization"] = `Bearer ${token}`;
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 5000);
+  const timeout = setTimeout(() => controller.abort(), formData ? 30000 : 5000);
   try {
     const res = await fetch(`${BASE}${path}`, { ...rest, headers, body, signal: controller.signal });
     if (!res.ok) {

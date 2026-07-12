@@ -73,7 +73,11 @@ export default function AddItem() {
   if (step === "camera") {
     return (
       <View style={s.flex}>
-        <Stack.Screen options={{ title: "Take Photo" }} />
+        <Stack.Screen options={{ title: "Take Photo", headerLeft: () => (
+          <TouchableOpacity onPress={() => router.back()}>
+            <Ionicons name="close" size={28} color={colors.white} />
+          </TouchableOpacity>
+        ) }} />
         <CameraView ref={cameraRef} style={s.camera} facing="back" />
         <View style={s.cameraOverlay}>
           <TouchableOpacity style={s.captureBtn} onPress={takePhoto} disabled={processing}>
@@ -90,7 +94,11 @@ export default function AddItem() {
   if (step === "barcode") {
     return (
       <View style={s.flex}>
-        <Stack.Screen options={{ title: "Scan Barcode" }} />
+        <Stack.Screen options={{ title: "Scan Barcode", headerLeft: () => (
+          <TouchableOpacity onPress={() => router.back()}>
+            <Ionicons name="close" size={28} color={colors.white} />
+          </TouchableOpacity>
+        ) }} />
         <CameraView ref={cameraRef} style={s.camera} facing="back" onBarcodeScanned={handleBarcode} />
         <View style={s.cameraOverlay}>
           <Text style={s.hint}>Point camera at back cover barcode</Text>
@@ -102,7 +110,14 @@ export default function AddItem() {
 
   return (
     <ScrollView contentContainerStyle={s.formContainer}>
-      <Stack.Screen options={{ title: "Item Details" }} />
+      <Stack.Screen options={{ title: "Item Details", headerLeft: () => (
+        <TouchableOpacity onPress={() => Alert.alert("Cancel", "Discard this item?", [
+          { text: "Keep Editing", style: "cancel" },
+          { text: "Discard", style: "destructive", onPress: () => router.back() },
+        ])}>
+          <Ionicons name="close" size={28} color={colors.text} />
+        </TouchableOpacity>
+      ) }} />
       {photo && (
         <Card style={{ padding: spacing.xs, marginBottom: spacing.md }}>
           <Image source={{ uri: photo }} style={s.preview} />

@@ -29,7 +29,7 @@ export function lookupBarcode(storeId, barcode) {
 export function processImage(imageUri) {
   const formData = new FormData();
   const filename = imageUri.split("/").pop() || "photo.jpg";
-  formData.append("image", { uri: imageUri, name: filename, type: "image/jpeg" });
+  formData.append("file", { uri: imageUri, name: filename, type: "image/jpeg" });
   return api("/api/inventory/process-image", {
     method: "POST",
     formData,
