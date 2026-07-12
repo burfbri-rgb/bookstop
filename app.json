@@ -34,7 +34,18 @@
           "cameraPermission": "Allow Bookstop to access your camera for item photos and barcode scanning."
         }
       ],
-      "expo-sqlite"
+      "expo-sqlite",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "abiFilters": ["arm64-v8a", "armeabi-v7a", "x86_64"]
+          }
+        }
+      ]
+    ],
+      "expo-sqlite",
+      "expo-build-properties"
     ],
     "extra": {
       "router": {
