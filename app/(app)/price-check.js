@@ -31,13 +31,17 @@ export default function PriceCheck() {
     if (found || busy) return;
     setBusy(true);
     try {
-      const items = await inventoryApi.listInventory(activeStore.store_id);
-      const match = Array.isArray(items) ? items.find(i => i.barcode_isbn === data) : null;
-      if (!match) { Alert.alert("Not Found", `No item with barcode ${data}`); setBusy(false); return; }
+      const item = await inventoryApi.lookupBarcode(activeStore.store_id, data);
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-      setFound(match);
+      setFound(item);
       Animated.spring(zoom, { toValue: 1, useNativeDriver: true }).start();
-    } catch (e) { Alert.alert("Error", e.body || e.message); }
+    } catch (e) {
+      if (e.status === 404) {
+        Alert.alert("Not Found", "No item with this barcode in your store.");
+      } else {
+        Alert.alert("Error", e.body || e.message);
+      }
+    }
     finally { setBusy(false); }
   };
 
