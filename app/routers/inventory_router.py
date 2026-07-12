@@ -69,6 +69,25 @@ def list_items(
         return items
 
 
+@router.get("/by-barcode/{barcode}", response_model=InventoryResponse)
+def get_item_by_barcode(
+    barcode: str,
+    store_id: UUID = Query(...),
+    owner_id: UUID = Depends(require_owner_id),
+):
+    with SessionLocal() as session:
+        _verify_store_ownership(session, store_id, owner_id)
+        item = session.execute(
+            select(InventoryItem).where(
+                InventoryItem.store_id == store_id,
+                InventoryItem.barcode_isbn == barcode,
+            )
+        ).scalar_one_or_none()
+        if not item:
+            raise HTTPException(status_code=404, detail="Item not found")
+        return item
+
+
 @router.patch("/{item_id}", response_model=InventoryResponse)
 def update_item(item_id: UUID, body: InventoryUpdate, owner_id: UUID = Depends(require_owner_id)):
     with SessionLocal() as session:
