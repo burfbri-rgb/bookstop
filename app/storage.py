@@ -1,9 +1,5 @@
-from io import BytesIO
-
 import cloudinary
 import cloudinary.uploader
-from PIL import Image
-from rembg import remove
 
 from app.config import CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET
 
@@ -15,12 +11,8 @@ cloudinary.config(
 
 
 def process_and_upload(file_bytes: bytes, prefix: str = "items") -> str:
-    input_img = Image.open(BytesIO(file_bytes))
-    output = remove(input_img)
-    buf = BytesIO()
-    output.save(buf, "PNG")
     result = cloudinary.uploader.upload(
-        buf.getvalue(),
+        file_bytes,
         folder=prefix,
         resource_type="image",
         overwrite=False,

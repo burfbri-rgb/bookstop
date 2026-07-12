@@ -9,7 +9,4 @@ email-validator
 Pillow
 psycopg2-binary
 cloudinary
-rembg[cpu]
-scikit-image
-pymatting
 requests
