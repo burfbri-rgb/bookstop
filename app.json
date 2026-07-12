@@ -44,9 +44,6 @@
         }
       ]
     ],
-      "expo-sqlite",
-      "expo-build-properties"
-    ],
     "extra": {
       "router": {
         "origin": false
