@@ -3,23 +3,7 @@ services:
     name: bookstop
     runtime: python
     plan: free
-    buildCommand: |
-      pip install -r requirements.txt
-      python -c "
-import os, urllib.request
-model_dir = os.path.join(os.getcwd(), '.u2net')
-os.makedirs(model_dir, exist_ok=True)
-model_path = os.path.join(model_dir, 'u2net.onnx')
-if not os.path.exists(model_path):
-    print('Downloading rembg model (170MB)...')
-    urllib.request.urlretrieve(
-        'https://github.com/danielgatis/rembg/releases/download/v0.0.0/u2net.onnx',
-        model_path
-    )
-    print('Model downloaded')
-else:
-    print('Model already cached')
-"
+    buildCommand: pip install -r requirements.txt && python scripts/download_model.py
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: DATABASE_URL
