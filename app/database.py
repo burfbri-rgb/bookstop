@@ -43,6 +43,7 @@ class InventoryItem(Base):
     item_id = Column(Uuid(), primary_key=True, default=uuid4)
     store_id = Column(Uuid(), ForeignKey("stores.store_id"), nullable=False)
     barcode_isbn = Column(String, nullable=True)
+    title = Column(String, nullable=True)
     price = Column(Numeric(10, 2), nullable=False)
     stock_count = Column(Integer, nullable=False)
     clean_image_url = Column(String, nullable=True)

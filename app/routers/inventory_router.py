@@ -46,6 +46,7 @@ def create_item(body: InventoryCreate, owner_id: UUID = Depends(require_owner_id
             price=body.price,
             stock_count=body.stock_count,
             barcode_isbn=body.barcode_isbn,
+            title=body.title,
             clean_image_url=body.clean_image_url,
         )
         session.add(item)
@@ -98,6 +99,8 @@ def update_item(item_id: UUID, body: InventoryUpdate, owner_id: UUID = Depends(r
             item.stock_count = body.stock_count
         if body.barcode_isbn is not None:
             item.barcode_isbn = body.barcode_isbn
+        if body.title is not None:
+            item.title = body.title
         session.commit()
         session.refresh(item)
         return item

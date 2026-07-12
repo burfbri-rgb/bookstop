@@ -9,7 +9,6 @@ from app.routers.store_router import router as store_router
 from app.routers.inventory_router import router as inventory_router
 from app.routers.transaction_router import router as transaction_router
 from app.routers.notifications_router import router as notifications_router
-from app.routers.vision_router import router as vision_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -28,7 +27,6 @@ app.include_router(store_router)
 app.include_router(inventory_router)
 app.include_router(transaction_router)
 app.include_router(notifications_router)
-app.include_router(vision_router)
 
 
 @app.get("/api/health")

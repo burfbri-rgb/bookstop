@@ -37,6 +37,7 @@ class InventoryCreate(BaseModel):
     price: Decimal
     stock_count: int
     barcode_isbn: str | None = None
+    title: str | None = None
     clean_image_url: str | None = None
 
 
@@ -44,12 +45,14 @@ class InventoryUpdate(BaseModel):
     price: Decimal | None = None
     stock_count: int | None = None
     barcode_isbn: str | None = None
+    title: str | None = None
 
 
 class InventoryResponse(BaseModel):
     item_id: UUID
     store_id: UUID
     barcode_isbn: str | None = None
+    title: str | None = None
     price: Decimal
     stock_count: int
     clean_image_url: str | None = None
