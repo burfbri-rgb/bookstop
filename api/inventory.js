@@ -22,6 +22,10 @@ export function deleteInventory(itemId) {
   return api(`/api/inventory/${itemId}`, { method: "DELETE" });
 }
 
+export function lookupBarcode(storeId, barcode) {
+  return api(`/api/inventory/by-barcode/${encodeURIComponent(barcode)}?store_id=${storeId}`);
+}
+
 export function processImage(imageUri) {
   const formData = new FormData();
   const filename = imageUri.split("/").pop() || "photo.jpg";
