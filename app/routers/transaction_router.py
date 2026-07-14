@@ -1,4 +1,4 @@
-import csv, io
+import csv, io, json
 from datetime import date
 from uuid import UUID
 
@@ -63,6 +63,52 @@ def process_sale(
         session.commit()
         session.refresh(tx)
         return tx
+
+
+# ponytail: single-session transaction, no optimistic locking — add when concurrent POS needed
+@router.post("/batch-sale", response_model=list[SaleResponse], status_code=201)
+def batch_sale(
+    store_id: str = Form(...),
+    items: str = Form(...),
+    receipt_image: UploadFile | None = File(None),
+    owner_id: UUID = Depends(require_owner_id),
+):
+    sid = UUID(store_id)
+    parsed = json.loads(items)
+
+    receipt_url = None
+    if receipt_image:
+        receipt_url = upload_raw(receipt_image.file.read(), "receipts")
+
+    with SessionLocal() as session:
+        _verify_store_ownership(session, sid, owner_id)
+        transactions = []
+        for entry in parsed:
+            iid = UUID(entry["item_id"])
+            qty = entry.get("quantity", 1)
+            item = session.execute(
+                select(InventoryItem).where(
+                    InventoryItem.item_id == iid, InventoryItem.store_id == sid
+                )
+            ).scalar_one_or_none()
+            if not item:
+                raise HTTPException(status_code=404, detail=f"Item {iid} not found")
+            if item.stock_count < qty:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Item {item.title or iid} only has {item.stock_count} in stock, needed {qty}",
+                )
+            item.stock_count -= qty
+            if item.stock_count <= 0:
+                send_push(owner_id, "Out of Stock", f"{item.title or 'Item'} is now out of stock")
+            for _ in range(qty):
+                tx = Transaction(item_id=iid, store_id=sid, receipt_image_url=receipt_url)
+                session.add(tx)
+                transactions.append(tx)
+        session.commit()
+        for tx in transactions:
+            session.refresh(tx)
+        return transactions
 
 
 @router.get("/stats/{store_id}")
