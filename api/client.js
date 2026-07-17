@@ -1,3 +1,4 @@
+import * as FileSystem from "expo-file-system";
 import { getItem } from "../context/storage";
 
 const BASE = "https://bookstop-1.onrender.com";
@@ -12,13 +13,13 @@ export class ApiError extends Error {
 
 export async function api(path, options = {}) {
   const token = await getItem("token");
-  const { file, formData, ...rest } = options;
+  const { formData, ...rest } = options;
 
   let headers = {};
   let body;
 
-  if (file || formData) {
-    body = file || formData;
+  if (formData) {
+    body = formData;
   } else {
     headers["Content-Type"] = "application/json";
     body = rest.body ? JSON.stringify(rest.body) : undefined;
@@ -43,4 +44,20 @@ export async function api(path, options = {}) {
   } finally {
     clearTimeout(timeout);
   }
+}
+
+export async function uploadFile(path, fileUri, fieldName, extraFields) {
+  const token = await getItem("token");
+  const headers = { Authorization: `Bearer ${token}` };
+  const result = await FileSystem.uploadAsync(`${BASE}${path}`, fileUri, {
+    httpMethod: "POST",
+    uploadType: FileSystem.FileSystemUploadType.MULTIPART,
+    fieldName,
+    parameters: extraFields,
+    headers,
+  });
+  if (result.status >= 400) {
+    throw new ApiError(result.status, result.body);
+  }
+  return JSON.parse(result.body);
 }
