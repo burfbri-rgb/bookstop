@@ -1,4 +1,4 @@
-import { api } from "./client";
+import { api, uploadFile } from "./client";
 
 export function listInventory(storeId) {
   return api(`/api/inventory?store_id=${storeId}`);
@@ -26,12 +26,6 @@ export function lookupBarcode(storeId, barcode) {
   return api(`/api/inventory/by-barcode/${encodeURIComponent(barcode)}?store_id=${storeId}`);
 }
 
-export function processImage(imageUri) {
-  const formData = new FormData();
-  const filename = imageUri.split("/").pop() || "photo.jpg";
-  formData.append("file", { uri: imageUri, name: filename, type: "image/jpeg" });
-  return api("/api/inventory/process-image", {
-    method: "POST",
-    formData,
-  });
+export async function processImage(imageUri) {
+  return uploadFile("/api/inventory/process-image", imageUri, "file");
 }
