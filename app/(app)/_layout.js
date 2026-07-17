@@ -25,6 +25,9 @@ export default function AppLayout() {
       <Tabs.Screen name="sale" options={{ title: "Sale", tabBarIcon: ({ size, color }) => <Ionicons name="cart" size={size} color={color} /> }} />
       <Tabs.Screen name="price-check" options={{ title: "Price Check", tabBarIcon: ({ size, color }) => <Ionicons name="scan" size={size} color={color} /> }} />
       <Tabs.Screen name="stores" options={{ title: "Settings", tabBarIcon: ({ size, color }) => <Ionicons name="settings" size={size} color={color} /> }} />
+      <Tabs.Screen name="export" options={{ title: "Export", tabBarIcon: ({ size, color }) => <Ionicons name="download-outline" size={size} color={color} /> }} />
+      <Tabs.Screen name="item-detail/[id]" options={{ href: null }} />
+      <Tabs.Screen name="add-item" options={{ title: "Add Item", tabBarIcon: ({ size, color }) => <Ionicons name="camera-outline" size={size} color={color} /> }} />
     </Tabs>
   );
 }
