@@ -12,6 +12,18 @@ from app.routers.notifications_router import router as notifications_router
 
 Base.metadata.create_all(bind=engine)
 
+
+def run_migrations():
+    with engine.connect() as conn:
+        try:
+            conn.execute(text("ALTER TABLE inventory ADD COLUMN title VARCHAR"))
+            conn.commit()
+        except Exception:
+            pass  # column already exists
+
+
+run_migrations()
+
 app = FastAPI(title="Bookstop API")
 
 app.add_middleware(
