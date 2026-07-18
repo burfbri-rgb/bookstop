@@ -24,6 +24,10 @@ class StoreCreate(BaseModel):
     store_name: str
 
 
+class StoreUpdate(BaseModel):
+    store_name: str
+
+
 class StoreResponse(BaseModel):
     store_id: UUID
     owner_id: UUID

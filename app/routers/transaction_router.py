@@ -116,7 +116,13 @@ def store_stats(store_id: UUID, owner_id: UUID = Depends(require_owner_id)):
     with SessionLocal() as session:
         _verify_store_ownership(session, store_id, owner_id)
         today = date.today()
-        row = session.execute(
+        base = (
+            select(func.coalesce(func.sum(InventoryItem.price), 0))
+            .select_from(Transaction)
+            .join(InventoryItem, Transaction.item_id == InventoryItem.item_id)
+            .where(Transaction.store_id == store_id)
+        )
+        daily_row = session.execute(
             select(
                 func.coalesce(func.sum(InventoryItem.price), 0),
                 func.count(Transaction.transaction_id),
@@ -126,7 +132,13 @@ def store_stats(store_id: UUID, owner_id: UUID = Depends(require_owner_id)):
             .where(Transaction.store_id == store_id)
             .where(func.date(Transaction.sale_date) == today)
         ).one()
-        return {"daily_revenue": float(row[0]), "total_sold": row[1], "transaction_count": row[1]}
+        total = session.execute(base).scalar() or 0
+        return {
+            "daily_revenue": float(daily_row[0]),
+            "total_sold": daily_row[1],
+            "transaction_count": daily_row[1],
+            "total_revenue": float(total),
+        }
 
 
 # ponytail: csv.writer + StreamingResponse, skip pandas/add pagination at 10k+ rows
