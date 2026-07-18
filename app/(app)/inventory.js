@@ -71,7 +71,7 @@ export default function Inventory() {
               </View>
               <View style={s.info}>
                 {item.title ? <Text style={s.title} numberOfLines={1}>{item.title}</Text> : null}
-                <Text style={s.price}>${parseFloat(item.price).toFixed(2)}</Text>
+                <Text style={s.price}>{parseFloat(item.price).toFixed(2)}</Text>
                 {item.barcode_isbn && <Text style={s.barcode}>{item.barcode_isbn}</Text>}
               </View>
               <Badge label={String(item.stock_count)} variant={item.stock_count <= 2 ? "danger" : "success"} icon="cube" />

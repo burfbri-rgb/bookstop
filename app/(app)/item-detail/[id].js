@@ -73,7 +73,7 @@ export default function ItemDetail() {
         </Card>
       )}
       <View style={{ flexDirection: "row", gap: spacing.sm, marginBottom: spacing.md }}>
-        <Badge label={`$${parseFloat(item.price).toFixed(2)}`} icon="pricetag" />
+        <Badge label={parseFloat(item.price).toFixed(2)} icon="pricetag" />
         <Badge label={`Stock: ${item.stock_count}`} icon="cube" variant={item.stock_count <= 2 ? "danger" : "success"} />
         {item.barcode_isbn && <Badge label={item.barcode_isbn} icon="barcode" />}
       </View>

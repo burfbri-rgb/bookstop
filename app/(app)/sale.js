@@ -170,7 +170,7 @@ export default function Sale() {
               >
                 <View style={s.rowInfo}>
                   <Text style={s.rowTitle} numberOfLines={1}>{item.title}</Text>
-                  <Text style={s.rowPrice}>${parseFloat(item.price).toFixed(2)}</Text>
+                  <Text style={s.rowPrice}>{parseFloat(item.price).toFixed(2)}</Text>
                 </View>
                 <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs }}>
                   <Badge label={`${item.stock_count}`} icon="cube" variant={item.stock_count <= 2 ? "danger" : "success"} />
@@ -203,7 +203,7 @@ export default function Sale() {
               <Card key={c.item_id} style={{ flexDirection: "row", alignItems: "center", marginBottom: spacing.sm, padding: spacing.sm }}>
                 <View style={{ flex: 1 }}>
                   <Text style={s.cartTitle} numberOfLines={1}>{c.title}</Text>
-                  <Text style={s.cartPrice}>${lineTotal.toFixed(2)}</Text>
+                  <Text style={s.cartPrice}>{lineTotal.toFixed(2)}</Text>
                 </View>
                 <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.xs }}>
                   <TouchableOpacity style={s.qtyBtn} onPress={() => changeQty(c.item_id, -1)}>
@@ -221,7 +221,7 @@ export default function Sale() {
             );
           })}
           <Card style={{ padding: spacing.md, marginBottom: spacing.md }}>
-            <Text style={s.totalText}>Total: ${total.toFixed(2)}</Text>
+            <Text style={s.totalText}>Total: {total.toFixed(2)}</Text>
           </Card>
         </View>
       ) : (

@@ -69,7 +69,7 @@ export default function PriceCheck() {
           <Card style={{ alignItems: "center", padding: spacing.xl, width: "100%" }}>
             <Ionicons name="pricetag" size={48} color={colors.primaryDark} />
             {found.title ? <Text style={s.foundTitle}>{found.title}</Text> : null}
-            <Text style={s.price}>${parseFloat(found.price).toFixed(2)}</Text>
+            <Text style={s.price}>{parseFloat(found.price).toFixed(2)}</Text>
             <View style={{ flexDirection: "row", gap: spacing.sm, marginTop: spacing.md, marginBottom: spacing.lg }}>
               <Badge label={`${found.stock_count} in stock`} icon="cube" variant={found.stock_count <= 2 ? "danger" : "success"} />
               {found.barcode_isbn && <Badge label={found.barcode_isbn} icon="barcode" />}
@@ -107,7 +107,7 @@ export default function PriceCheck() {
             <TouchableOpacity style={s.resultCard} onPress={() => { setFound(item); setQuery(""); Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light); }}>
               <View style={s.resultInfo}>
                 {item.title ? <Text style={s.resultTitle} numberOfLines={1}>{item.title}</Text> : null}
-                <Text style={s.resultPrice}>${parseFloat(item.price).toFixed(2)}</Text>
+                <Text style={s.resultPrice}>{parseFloat(item.price).toFixed(2)}</Text>
               </View>
               <Badge label={`${item.stock_count} in stock`} icon="cube" variant={item.stock_count <= 2 ? "danger" : "success"} />
             </TouchableOpacity>

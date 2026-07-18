@@ -10,3 +10,10 @@ export function createStore(store_name) {
     body: { store_name },
   });
 }
+
+export function renameStore(store_id, store_name) {
+  return api(`/api/stores/${store_id}`, {
+    method: "PATCH",
+    body: { store_name },
+  });
+}
